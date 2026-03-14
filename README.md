@@ -1,114 +1,134 @@
-# AI Research Platform
+# AI Research Paper Discovery & Summarization Platform
 
-An interactive **AI-powered research exploration platform** built with **Python, Streamlit, and Hugging Face Transformers**.
-The platform allows users to explore research papers, search topics, upload PDFs, and generate AI summaries of academic content.
+## Overview
 
-This project is designed as a **research-support tool** that helps users quickly analyze academic material and discover relevant research topics through an intuitive dashboard.
+This project is an **AI-powered research paper discovery and summarization platform** built using modern Natural Language Processing (NLP) tools. The system allows users to search for research papers based on semantic similarity, retrieve the most relevant papers from a dataset, and generate concise summaries of the selected research content.
 
----
+The platform is designed as a **local AI research assistant** that demonstrates how embeddings, semantic search, and transformer-based summarization models can be integrated into a research workflow.
 
-# Key Features
+The application uses **semantic embeddings to understand research paper abstracts**, enabling it to retrieve papers based on meaning rather than simple keyword matching. Once relevant papers are found, the system can generate **AI-generated summaries** to help users quickly understand the core ideas of the research.
 
-### 1. Research Paper Topic Explorer
-
-Users can search through a processed research dataset and discover papers related to specific topics.
-
-* Keyword search for research papers
-* View titles, abstracts, and metadata
-* Quickly identify relevant research directions
-
-### 2. AI-Powered Text Summarization
-
-The platform integrates a **Transformer-based language model** to generate concise summaries.
-
-Users can:
-
-* Paste text
-* Upload research PDFs
-* Generate short summaries automatically
-
-This helps users **quickly understand long academic documents**.
-
-### 3. PDF Research Analysis
-
-Users can upload research papers in PDF format and automatically extract text for analysis and summarization.
-
-### 4. Interactive Dashboard
-
-The entire platform is built with **Streamlit**, providing:
-
-* Interactive UI
-* Fast search functionality
-* Real-time summarization
-* Simple navigation
+A lightweight **Streamlit interface** is used to provide an interactive front-end for exploring the dataset and testing the AI features.
 
 ---
 
-# Technologies Used
+# Features
 
-* Python
-* Streamlit
-* Hugging Face Transformers
-* Pandas
-* PyPDF
-* Machine Learning / NLP
+* Semantic search over research paper abstracts
+* AI-generated research summaries
+* Embedding-based similarity matching
+* Streamlit interactive interface
+* Modular Python architecture for easy extension
+* Designed for experimentation with **AI-assisted research tools**
 
 ---
 
-# Project Structure
+# Project Architecture
 
 ```
 AI_RESEARCH_PLATFORM
 │
-├── app/
-│   └── streamlit_app.py        # Main Streamlit application
+├── app
+│   └── streamlit_app.py
 │
-├── my_scripts/
-│   └── summarizer.py           # AI summarization module
+├── scripts
+│   ├── summarizer.py
+│   ├── embeddings.py
+│   └── similarity.py
 │
-├── data/
-│   └── arxiv_processed.csv     # Research dataset (NOT included in repo)
+├── data
+│   ├── arxiv_processed.csv
+│   └── arxiv_embeddings.npy
 │
-├── static/                     # Static resources
-│
-├── requirements.txt            # Python dependencies
-│
+├── requirements.txt
 └── README.md
 ```
 
----
+### Main Components
 
-# Important Note About Large Files
+**1. Embedding Generator (`embeddings.py`)**
 
-To keep the repository lightweight and compatible with GitHub limits, the following items **are NOT included in this repository**:
+This script converts research paper abstracts into **vector embeddings** using a sentence-transformer model. These embeddings allow semantic comparison between research papers.
 
-### 1. Dataset
-
-The research dataset (`arxiv_processed.csv`) has **not been uploaded** because of its large size.
-
-Users must download or generate this dataset separately and place it inside the **data/** folder.
-
-Example location:
+Model used:
 
 ```
-data/arxiv_processed.csv
+all-MiniLM-L6-v2
+```
+
+The embeddings are stored as:
+
+```
+arxiv_embeddings.npy
 ```
 
 ---
 
-### 2. Python Virtual Environment
+**2. Similarity Search (`similarity.py`)**
 
-The **`venv/` folder is not included** because virtual environments contain thousands of large dependency files.
+This module performs **cosine similarity search** between a user query and the stored embeddings to find the most relevant research papers.
 
-Users should create their own virtual environment when running the project.
+The system returns the **top 10 most similar research papers**.
+
+---
+
+**3. Summarization Engine (`summarizer.py`)**
+
+The summarizer uses a transformer model to generate concise summaries of research abstracts.
+
+Model used:
+
+```
+facebook/bart-large-cnn
+```
+
+This model is widely used for **abstractive text summarization**.
 
 ---
 
-# Installation and Setup
+**4. Streamlit Application (`streamlit_app.py`)**
 
-Follow these steps to run the project locally.
+The Streamlit interface allows users to:
+
+* Enter research queries
+* Retrieve similar research papers
+* Generate summaries of selected papers
 
 ---
+
+# Dataset
+
+This project uses research metadata from the **ArXiv dataset**.
+
+Because the dataset and embeddings are **very large**, they are **NOT included in this repository**.
+
+Users must download the dataset manually before running the project.
+
+### Dataset Source
+
+Primary dataset:
+
+[https://www.kaggle.com/datasets/Cornell-University/arxiv](https://www.kaggle.com/datasets/Cornell-University/arxiv)
+
+Alternative dataset:
+
+[https://www.kaggle.com/datasets/tarunpaparaju/arxiv-metadata-oai-snapshot](https://www.kaggle.com/datasets/tarunpaparaju/arxiv-metadata-oai-snapshot)
+
+---
+
+# Large Files Notice
+
+The following files are **not uploaded to GitHub** because they exceed GitHub's size limits:
+
+* `data/arxiv_processed.csv`
+* `data/arxiv_embeddings.npy`
+* the entire `venv/` environment
+
+These files must be recreated locally.
+
+---
+
+# Setup Instructions
 
 ## 1. Clone the Repository
 
@@ -119,7 +139,7 @@ cd AI_RESEARCH_PLATFORM
 
 ---
 
-## 2. Create a Virtual Environment
+## 2. Create a Python Environment
 
 ```
 python -m venv venv
@@ -133,7 +153,7 @@ Windows
 venv\Scripts\activate
 ```
 
-Mac / Linux
+Mac/Linux
 
 ```
 source venv/bin/activate
@@ -144,57 +164,108 @@ source venv/bin/activate
 ## 3. Install Dependencies
 
 ```
+pip install streamlit
+pip install transformers
+pip install sentence-transformers
+pip install faiss-cpu
+pip install pandas
+pip install scikit-learn
+```
+
+Alternatively install from:
+
+```
 pip install -r requirements.txt
 ```
 
 ---
 
-## 4. Add the Dataset
+## 4. Download the Dataset
 
-Download or prepare the dataset and place it in:
+Download the ArXiv metadata dataset and place the processed CSV file inside:
 
 ```
 data/arxiv_processed.csv
 ```
 
-Without this file, the research search functionality will not work.
+The CSV should contain at least:
+
+* title
+* abstract
+* categories
 
 ---
 
-## 5. Run the Streamlit App
+## 5. Generate Embeddings
+
+Run the embedding script:
+
+```
+python scripts/embeddings.py
+```
+
+This will generate:
+
+```
+data/arxiv_embeddings.npy
+```
+
+This step may take several minutes depending on dataset size.
+
+---
+
+## 6. Run the Application
+
+Start the Streamlit interface:
 
 ```
 streamlit run app/streamlit_app.py
 ```
 
-The application will open in your browser.
+Then open the browser at:
+
+```
+http://localhost:8501
+```
 
 ---
 
-Project Sample Output (Screenshots)
+# Technologies Used
 
+* Python
+* Streamlit
+* Transformers
+* Sentence Transformers
+* NumPy
+* Pandas
+* Scikit-learn
+* HuggingFace Models
+
+---
 
 # Future Improvements
 
-Possible extensions for this platform include:
+Potential improvements for this project include:
 
-* AI-based research recommendation system
-* Topic clustering and visualization
-* Citation network graphs
-* Research trend analysis
-* Integration with online research APIs (arXiv, Semantic Scholar)
+* Integration with the ArXiv API
+* Vector database using FAISS or Chroma
+* Retrieval-Augmented Generation (RAG)
+* Full paper PDF retrieval
+* Research question answering system
+* AI research recommendation engine
 
 ---
 
-# Purpose of This Project
+# Educational Purpose
 
-This project demonstrates:
+This project was created as a **learning project for AI-powered research tools**. It demonstrates how modern NLP models can be used to build systems that assist researchers in discovering and understanding scientific literature.
 
-* AI/NLP integration
-* Real-world research tools
-* full-stack Python application development
-* dataset-driven interactive dashboards
+---
 
-Licensed Project
-- Joseph Albert D Costa
+# License
+Joseph Albert D Costa
 
+This project is open-source and intended for educational and research purposes.
+
+
+Those improvements can make the project look **3–5× stronger on GitHub.**
