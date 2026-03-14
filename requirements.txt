@@ -1,0 +1,12 @@
+streamlit
+pandas
+numpy
+scikit-learn
+plotly
+sentence-transformers
+transformers
+PyPDF2
+networkx
+matplotlib
+nltk
+faiss-cpu
